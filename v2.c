@@ -7,7 +7,7 @@
 ///////////////////////////////////////////////////////////////////////
 // Struct & shenanigans
 ///////////////////////////////////////////////////////////////////////
-
+// Struct s_bucket, contendo o vetor do bucket, seu tamanho e seus limites.
 typedef struct {
 	int *v;
 	int tam_bucket;
@@ -58,6 +58,9 @@ int main(int argc, char **argv) {
   	int j;
   	int aux;
 	int *vetor = (int *) malloc(sizeof(int)*tam_vetor);
+	int *vetor_final = (int *) malloc(sizeof(int)*tam_vetor);
+
+	// Inicia a seed do "rand", preenche o vetor com números aleatórios e printa o vetor.
 	srand((unsigned)time(NULL));
 	for(i = 0; i < tam_vetor; i++){
 		vetor[i] = rand() % tam_vetor;
@@ -132,14 +135,13 @@ int main(int argc, char **argv) {
 		}
 	}
 
-	// Print para teste
+	// Print para teste, lindão <3
 	for (i = 0; i < nBuckets; ++i) {			
 			printf("\nBucket %d: %d-%d\n", i, listaDeBuckets[i].minimo, listaDeBuckets[i].maximo);
 			for(aux = 0; aux < listaDeBuckets[i].tam_bucket; aux++) {
 				printf("%d, ", listaDeBuckets[i].v[aux]);
 			}
 		}
-
 
 ///////////////////////////////////////////////////////////////////////
 // MPI SHENANIGANS - LEARN HOW TO DO THIS
@@ -151,6 +153,20 @@ int main(int argc, char **argv) {
 // Reinserir os valores dos buckets, ordenadamente, no array principal
 ///////////////////////////////////////////////////////////////////////
 
+	// Insere os vetores dos buckets novamente a um único vetor.
+	aux = 0;
+	for (i = 0; i < nBuckets; i++) {
+		for (j = 0; j < listaDeBuckets[i].tam_bucket; j++){
+			vetor_final[aux] = listaDeBuckets[i].v[j];
+			aux++;
+		}
+	}
+
+	// Imprime o vetor ordenado
+	for(i = 0; i < tam_vetor; i++){
+		printf("%d ", vetor_final[i]);
+	}
+	printf("\n");
 
 
 ///////////////////////////////////////////////////////////////////////
